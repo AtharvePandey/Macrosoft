@@ -1,2 +1,2 @@
 # Macrosoft
-The real repository of team Macrosoft
+The official repository of team Macrosoft
