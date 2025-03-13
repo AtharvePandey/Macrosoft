@@ -15,7 +15,7 @@ function Comment() {
         onChange={handler}
         placeholder="Enter text here"
       />
-      <p>You entered: {text}</p>
+      <p>Comment: {text}</p>
     </div>
   );
 }
