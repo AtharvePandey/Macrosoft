@@ -25,7 +25,10 @@
     /* Custom Paths */
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@asset/*": ["./src/assets/*"],
+      "@component/*": ["./src/components/*"],
+      "@page/*": ["./src/pages/*"],
+      "@style/*": ["./src/styles/*"]
     }
   },
   "include": ["src"]
