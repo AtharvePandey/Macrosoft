@@ -3,7 +3,9 @@ import React, { useState } from "react";
 function Comment() {
   const [text, setText] = useState("");
 
-  const handler = (event) => {
+  const handler = (event: {
+    target: { value: React.SetStateAction<string> };
+  }) => {
     setText(event.target.value);
   };
 
