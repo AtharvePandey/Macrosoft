@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 // Data Models for Polispace Application
 // These models represent the core entities in the Polispace and their relationships.
 
