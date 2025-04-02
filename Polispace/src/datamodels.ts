@@ -56,8 +56,8 @@ interface PostInterface {
   primaryContent?: string; // TBD: Should contain the information needed to create non-text items in the post, like a video or poll options.
   textContent?: string; // The textual content of the post
   category: string; // Category of the post (e.g., 'policy', 'event'), can be defined or completely arbitrary upon discussion
-  createdAt: string; // ISO timestamp of creation
-  updatedAt?: string; // ISO timestamp of last update (nullable)
+  createdAt: Date; // ISO timestamp of creation
+  updatedAt?: Date; // ISO timestamp of last update (nullable)
 
   getReactionAmounts(): Map<ReactionInterface, number>;
   getReactions(): PartialReturn<UserReactionInterface>[];
