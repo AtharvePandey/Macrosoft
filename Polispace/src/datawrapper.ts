@@ -1,3 +1,4 @@
+ 
 import { PostInterface, UserInterface, PostClassification, CommentInterface } from "./datamodels";
 import { Role } from "./datamodels";
 
@@ -43,13 +44,13 @@ export const DataWrapper = (() => {
 
     return {
         async getUser(userId: string): Promise<UserInterface | undefined> {
-            return new Promise(resolve => setTimeout(() => resolve(users.get(userId)), 300));
+            return new Promise(resolve => setTimeout(() => resolve(userData.get(userId)), 300));
         },
         async getPost(postId: string): Promise<PostInterface | undefined> {
-            return new Promise(resolve => setTimeout(() => resolve(posts.get(postId)), 300));
+            return new Promise(resolve => setTimeout(() => resolve(postData.get(postId)), 300));
         },
         async getComments(postId: string): Promise<CommentInterface[]> {
-            return new Promise(resolve => setTimeout(() => resolve(Array.from(comments.values()).filter(c => c.postId === postId)), 300));
+            return new Promise(resolve => setTimeout(() => resolve(Array.from(commentData.values()).filter((c: CommentInterface) => c.postId === postId)), 300));
         },
     };
 })();
