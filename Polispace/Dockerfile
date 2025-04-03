@@ -1,27 +1,27 @@
 # Use Node.js as base
 ARG NODE_VERSION=20
-FROM node:${NODE_VERSION}-alpine as base
+FROM node:${NODE_VERSION}-alpine AS base
 
 
 WORKDIR /usr/src/app
 
 ################################################################################
 # Install Dependencies
-FROM base as deps
+FROM base AS deps
 
 COPY package.json package-lock.json ./
 RUN npm ci --omit=dev
 
 ################################################################################
 # Build the application
-FROM deps as build
+FROM deps AS build
 
 COPY . . 
 RUN npm run build
 
 ################################################################################
 # Final Production Stage
-FROM base as final
+FROM base AS final
 
 ENV NODE_ENV production
 USER node
