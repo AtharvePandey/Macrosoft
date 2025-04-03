@@ -10,7 +10,7 @@ WORKDIR /usr/src/app
 FROM base AS deps
 
 COPY package.json package-lock.json ./
-RUN npm ci --omit=dev
+RUN npm ci
 
 ################################################################################
 # Build the application
