@@ -1,6 +1,7 @@
 # Use Node.js as base
-ARG NODE_VERSION=23.7.0
+ARG NODE_VERSION=20
 FROM node:${NODE_VERSION}-alpine as base
+
 
 WORKDIR /usr/src/app
 
