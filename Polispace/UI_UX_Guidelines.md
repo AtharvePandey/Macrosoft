@@ -4,7 +4,7 @@
 This document defines the UI/UX guidelines for PoliSpace, ensuring a standardized, accessible, and visually appealing user experience.
 
 ## 2. Color Scheme
-- **Primary Color:** #D32F2F (Red) – Main color / theme of polispace, ever present in the navbar and non-theme pages and the color theme for local feed to emphasize local engagement. 
+- **Primary Color:** #ec3f5b (Red) – Main color / theme of polispace, ever present in the navbar and non-theme pages and the color theme for local feed to emphasize local engagement. 
 - **Secondary Colors:**
   - **Blue Shades:** #6A5ACD (State tab) and #1E3A8A (Federal tab) – Used for navigation and visual distinction between feeds.
   - **Gray:** #F5F5F5 – Background for a clean, neutral appearance.
