@@ -25,12 +25,12 @@ const Post: React.FC<PostProps> = ({ postData }) => {
 
   return (
     <div className="border rounded-lg p-4 bg-white">
-      <h3 className="text-lg font-bold">{post.title}</h3>
+      <h3 className="text-gray-600 font-bold">{post.title}</h3>
       <p className="text-gray-600 text-sm mb-2">Posted by {post.authorId}</p>
       <p className="text-gray-800 mb-4">{post.textContent}</p>
 
       <div className="border-t pt-3 space-y-3">
-        <h4 className="font-medium text-sm">Comments:</h4>
+        <h4 className="text-gray-600 font-medium text-sm">Comments:</h4>
         {comments.map((comment) => (
           <Comment key={comment.id} commentData={comment.fetch()} />
         ))}
