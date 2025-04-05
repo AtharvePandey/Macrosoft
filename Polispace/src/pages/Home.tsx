@@ -1,12 +1,11 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import logo from "../assets/polispacelogo.svg";
 import { FeedScope } from "../datamodels";
 import Feed from "@component/Feed";
+import { SettingDropDown } from "@component/SettingDropDown";
 
 const Home = () => {
   const [activeFeed, setActiveFeed] = useState<FeedScope>(FeedScope.Local);
-  const navigate = useNavigate();
 
   const feedScopes = Object.values(FeedScope).filter(
     (value) => typeof value === "number"
@@ -16,8 +15,8 @@ const Home = () => {
     <div className="bg-[#F5F5F5] min-h-screen font-sans">
       {/* Navbar */}
       <header
-        className="text-white p-4 flex justify-between items-center sticky top-0 z-10"
-        style={{ backgroundColor: "#ec3f5b" }}
+        className="text-white p-4 flex justify-between items-center sticky top-0 z-10 bg-[#ec3f5b]"
+        // style={{ backgroundColor: "#ec3f5b" }}
       >
         <div className="flex items-center space-x-3">
           <img
@@ -28,13 +27,7 @@ const Home = () => {
           />
           <h1 className="text-2xl font-bold">PoliSpace</h1>
         </div>
-        <button
-          className="text-white text-4xl hover:brightness-90 transition-all focus:outline-none"
-          onClick={() => navigate("/settings")}
-          aria-label="Settings"
-        >
-          ⚙️
-        </button>
+        <SettingDropDown />
       </header>
 
       {/* Main Content */}
