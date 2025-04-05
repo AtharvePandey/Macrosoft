@@ -28,7 +28,8 @@
       "@asset/*": ["./src/assets/*"],
       "@component/*": ["./src/components/*"],
       "@page/*": ["./src/pages/*"],
-      "@style/*": ["./src/styles/*"]
+      "@style/*": ["./src/styles/*"],
+      "@dataWrapper": ["./src/datawrapper.ts"]
     }
   },
   "include": ["src"]

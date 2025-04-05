@@ -1,34 +1,37 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Post from "./Post";
-import { FeedInterface, PostInterface } from "../datamodels";
+import {
+  FeedInterface,
+  FeedScope,
+  PartialReturn,
+  PostInterface,
+} from "../datamodels";
+import DataWrapper from "@dataWrapper";
 
 interface FeedProps {
-  feed: FeedInterface;
+  feedScope: FeedScope;
 }
 
-const Feed: React.FC<FeedProps> = ({ feed }) => {
-  // In a real implementation, this should come from feed.getPosts()
-  const mockPosts: PartialReturn<PostInterface>[] = [
-    {
-      id: "post-1",
-      fetch: () => ({
-        postId: "post-1",
-        authorId: "user-1",
-        title: "Sample Post",
-        contentType: 0, // Text
-        textContent: "This is a sample post content",
-        category: "policy",
-        createdAt: new Date(),
-        getReactionAmounts: () => new Map(),
-        getReactions: () => [],
-        getComments: () => []
-      })
-    }
-  ];
+const Feed: React.FC<FeedProps> = (props: FeedProps) => {
+  const [feed, setFeed] = useState<FeedInterface | null>(null);
+  const [posts, setPosts] = useState<PartialReturn<PostInterface>[]>([]);
+
+  useEffect(() => {
+    const loadFeed = async () => {
+      const feedToLoad = (await DataWrapper.getCurrentUser())!.feeds[
+        props.feedScope
+      ]!;
+      setFeed((await DataWrapper.getFeed(feedToLoad))!);
+      setPosts(feed!.getPosts("TEST", 1));
+    };
+    loadFeed();
+  });
+
+  if (!feed) return <div>Loading feed...</div>;
 
   return (
     <div className="space-y-6">
-      {mockPosts.map(post => (
+      {posts.map((post) => (
         <Post key={post.id} postData={post} />
       ))}
     </div>

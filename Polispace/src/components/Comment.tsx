@@ -1,23 +1,7 @@
-import React, { useState } from "react";
+import { CommentInterface } from "src/datamodels";
 
-function Comment() {
-  const [text, setText] = useState("");
-
-  const handler = (event) => {
-    setText(event.target.value);
-  };
-
-  return (
-    <div>
-      <input
-        type="text"
-        value={text}
-        onChange={handler}
-        placeholder="Enter text here"
-      />
-      <p>Comment: {text}</p>
-    </div>
-  );
+function Comment(props: { commentData: CommentInterface }) {
+  return <div>{props.commentData.authorId}</div>;
 }
 
 export default Comment;

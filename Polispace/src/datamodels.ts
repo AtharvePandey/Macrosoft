@@ -25,7 +25,7 @@ interface UserInterface {
   email: string; // User's email address
   passwordHash: string; // Hashed password for security (we can hash out account management later. heh.)
   role: Role; // User role in the system. To keep titles netural we use poster/commentor to reflect user privileges.
-  feeds: Partial<Record<FeedScope, FeedInterface>>; // Feeds that the user is a part of.
+  feeds: Partial<Record<FeedScope, string>>; // Feeds that the user is a part of.
 }
 
 enum FeedScope {
@@ -69,8 +69,8 @@ interface CommentInterface {
   postId: string; // ID of the associated post
   authorId: string; // ID of the user who made the comment
   content: string; // Comment text
-  createdAt: string; // ISO timestamp of creation
-  updatedAt?: string; // ISO timestamp of last update (nullable)
+  createdAt: Date; // ISO timestamp of creation
+  updatedAt?: Date; // ISO timestamp of last update (nullable)
 }
 
 interface UserReactionInterface {
