@@ -13,7 +13,7 @@ RUN npm install
 COPY . .
 
 # port our app runs on
-EXPOSE 5173
+EXPOSE 5173:5173
 
 # idk what this does (from lecture)
 ENV HOST 0.0.0.0
