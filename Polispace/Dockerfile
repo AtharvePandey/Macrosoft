@@ -1,5 +1,5 @@
 #changed this because it was saying 'vulnerablility sldhflshjf'
-FROM node:20
+FROM node:20-slim
 
 
 # this thing is like our shell's directory in the container
