@@ -1,36 +1,21 @@
-# Use Node.js as base
-ARG NODE_VERSION=20
-FROM node:${NODE_VERSION}-alpine AS base
+#changed this because it was saying 'vulnerablility sldhflshjf'
+FROM node:23-slim
 
+# this thing is like our shell's directory in the container
+WORKDIR /app
 
-WORKDIR /usr/src/app
-
-################################################################################
-# Install Dependencies
-FROM base AS deps
-
+# install dependencies separately to leverage Docker caching (from lecture)
 COPY package.json package-lock.json ./
-RUN npm ci
+RUN npm install
 
-################################################################################
-# Build the application
-FROM deps AS build
+# copy the rest of the application (from lecture)
+COPY . .
 
-COPY . . 
-RUN npm run build
+# port our app runs on
+EXPOSE 5173
 
-################################################################################
-# Final Production Stage
-FROM base AS final
+# idk what this does (from lecture)
+ENV HOST 0.0.0.0
 
-ENV NODE_ENV production
-USER node
-
-# Copy only required files
-COPY package.json . 
-COPY --from=deps /usr/src/app/node_modules ./node_modules
-COPY --from=build /usr/src/app/dist ./dist
-
-EXPOSE 3000
-
-CMD ["npm", "run", "preview"]
+# our scripts in the json , note apparently we need another container to have the build scripts and stuff
+CMD ["npm", "run", "dev"]
