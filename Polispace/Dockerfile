@@ -1,11 +1,12 @@
 #changed this because it was saying 'vulnerablility sldhflshjf'
-FROM node:23-slim
+FROM node:20
+
 
 # this thing is like our shell's directory in the container
 WORKDIR /app
 
 # install dependencies separately to leverage Docker caching (from lecture)
-COPY package.json package-lock.json ./
+COPY package*.json ./
 RUN npm install
 
 # copy the rest of the application (from lecture)
