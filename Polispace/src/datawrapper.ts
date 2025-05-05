@@ -1,20 +1,27 @@
+import { db } from "../firebase.ts"; //from firebase docs i found
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  where,
+  setDoc,
+} from "firebase/firestore"; //from firebase docs i found
 import {
   PostInterface,
   UserInterface,
-  PostClassification,
   CommentInterface,
   FeedInterface,
   FeedScope,
-  ReactionInterface,
-  PartialReturn,
+  PostClassification,
 } from "./datamodels";
 import { Role } from "./datamodels";
 
-//we need a datawrapper that has mock data of a user
-const userData: Map<string, UserInterface> = new Map([
-  [
-    "TEST1",
-    {
+//Predefined mock data to seed the DB if necessary
+const mockData = {
+  users: {
+    TEST1: {
       userId: "1",
       username: "Alice",
       email: "alice@example.com",
@@ -24,10 +31,7 @@ const userData: Map<string, UserInterface> = new Map([
         [FeedScope.Local]: "TEST",
       },
     },
-  ],
-  [
-    "TEST2",
-    {
+    TEST2: {
       userId: "2",
       username: "Bob",
       email: "bob@example.com",
@@ -37,44 +41,9 @@ const userData: Map<string, UserInterface> = new Map([
         [FeedScope.Local]: "TEST",
       },
     },
-  ],
-]);
-
-//mock feed
-const feedData: Map<string, FeedInterface> = new Map([
-  [
-    "TEST",
-    {
-      feedID: "TEST",
-      feedLevel: FeedScope.Local,
-      regionID: "Washington, D.C.",
-      getPosts(_start: string, _amount: number) {
-        return [
-          {
-            item: postData.get("TEST")!,
-            id: "TEST",
-            fetch() {
-              return this.item;
-            },
-          } as PartialReturn<PostInterface>,
-          {
-            item: postData.get("TEST2")!,
-            id: "TEST2",
-            fetch() {
-              return this.item;
-            },
-          } as PartialReturn<PostInterface>,
-        ];
-      },
-    },
-  ],
-]);
-
-//gonna do the same thing for a mock post obj
-const postData: Map<string, PostInterface> = new Map([
-  [
-    "TEST",
-    {
+  },
+  posts: {
+    TEST: {
       postId: "1",
       authorId: "2",
       title: "Test post title!",
@@ -82,30 +51,10 @@ const postData: Map<string, PostInterface> = new Map([
       primaryContent: "skdlsjf",
       textContent: "Test content here. Everyone to be given free puppies by the state.",
       category: "policy",
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      getComments(_start, _amount) {
-        return [
-          {
-            item: commentData.get("TEST")!,
-            id: "TEST",
-            fetch() {
-              return this.item;
-            },
-          } as PartialReturn<CommentInterface>,
-        ];
-      },
-      getReactionAmounts() {
-        return new Map<ReactionInterface, number>();
-      },
-      getReactions() {
-        return [];
-      },
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
     },
-  ],
-  [
-    "TEST2",
-    {
+    TEST2: {
       postId: "2",
       authorId: "1",
       title: "Another test title???",
@@ -113,65 +62,109 @@ const postData: Map<string, PostInterface> = new Map([
       primaryContent: "skdlsjf",
       textContent: "Another test post? In this economy???",
       category: "policy",
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      getComments(_start, _amount) {
-        return [];
-      },
-      getReactionAmounts() {
-        return new Map<ReactionInterface, number>();
-      },
-      getReactions() {
-        return [];
-      },
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
     },
-  ],
-]);
-
-//same thing for comments, where post ID for comments will match post
-const commentData: Map<string, CommentInterface> = new Map([
-  [
-    "TEST",
-    {
+  },
+  feeds: {
+    TEST: {
+      feedID: "TEST",
+      feedLevel: FeedScope.Local,
+      regionID: "Washington, D.C.",
+    },
+  },
+  comments: {
+    TEST: {
       commentId: "1",
       postId: "1",
-      authorId: "1", //user 1 commented on user 2's post
+      authorId: "1",
       content: "lol f u",
-      createdAt: new Date(), //using this to mock stuff
-      updatedAt: new Date(),
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
     },
-  ],
-]);
+  },
+};
 
-async function getFromCollection<T>(
-  collection: Map<string, T>,
-  id: string
-): Promise<T | undefined> {
-  return new Promise((resolve) =>
-    setTimeout(() => resolve(collection.get(id)), 300)
-  );
+async function addMockData() {
+  for (const [key, user] of Object.entries(mockData.users)) {
+    const ref = doc(db, "users", key);
+    if (!(await getDoc(ref)).exists()) await setDoc(ref, user);
+  }
+  for (const [key, post] of Object.entries(mockData.posts)) {
+    const ref = doc(db, "posts", key);
+    if (!(await getDoc(ref)).exists()) await setDoc(ref, post);
+  }
+  for (const [key, feed] of Object.entries(mockData.feeds)) {
+    const ref = doc(db, "feeds", key);
+    if (!(await getDoc(ref)).exists()) await setDoc(ref, feed);
+  }
+  for (const [key, comment] of Object.entries(mockData.comments)) {
+    const ref = doc(db, "comments", key);
+    if (!(await getDoc(ref)).exists()) await setDoc(ref, comment);
+  }
 }
 
-const DataWrapper = (() => ({
-  getCurrentUser: () => getFromCollection(userData, "TEST1")!,
-  getFeed: (feedId: string) => getFromCollection(feedData, feedId),
-  getUser: (userId: string) => getFromCollection(userData, userId),
-  getPost: (postId: string) => getFromCollection(postData, postId),
-  async getComments(postId: string): Promise<CommentInterface[]> {
-    // THIS SHOULD BE CHANGED TO GRAB FROM LIST OF COMMENT IDS IN POST DATASTRUCTURE
+const DataWrapper = (() => {
+  return {
+    async init() { //populates db with some data to start with
+      await addMockData(); //via this function
+    },
 
-    return new Promise((resolve) =>
-      setTimeout(
-        () =>
-          resolve(
-            Array.from(commentData.values()).filter(
-              (c: CommentInterface) => c.postId === postId
-            )
-          ),
-        300
-      )
-    );
-  },
-}))();
+    //literally found all of this online on firebase docs
+    //you basically ask the db if its there, and if so, just return
+    //after casting it to the appropriate interfase
+    async getCurrentUser(): Promise<UserInterface | null> {
+      const docRef = doc(db, "users", "TEST1");
+      const docSnap = await getDoc(docRef);
+      return docSnap.exists() ? (docSnap.data() as UserInterface) : null;
+    },
+
+    async getUser(userId: string): Promise<UserInterface | null> {
+      const docRef = doc(db, "users", userId);
+      const docSnap = await getDoc(docRef);
+      return docSnap.exists() ? (docSnap.data() as UserInterface) : null;
+    },
+
+    async getPost(postId: string): Promise<PostInterface | null> {
+      const docRef = doc(db, "posts", postId);
+      const docSnap = await getDoc(docRef);
+      return docSnap.exists() ? (docSnap.data() as PostInterface) : null;
+    },
+
+    async getFeed(feedId: string): Promise<FeedInterface | null> {
+      const docRef = doc(db, "feeds", feedId);
+      const docSnap = await getDoc(docRef);
+      return docSnap.exists() ? (docSnap.data() as FeedInterface) : null;
+    },
+
+    async getComments(postId: string): Promise<CommentInterface[]> {
+      const q = query(collection(db, "comments"), where("postId", "==", postId));
+      const snapshot = await getDocs(q);
+      return snapshot.docs.map((doc) => doc.data() as CommentInterface);
+    },
+
+    //whenever someone wants to set something or add to db,
+    //just do DataWrapper.addFunc()
+    async addUser(user: UserInterface): Promise<void> {
+      const ref = doc(db, "users", user.userId);
+      await setDoc(ref, user);
+    },
+
+    async addPost(post: PostInterface): Promise<void> {
+      const ref = doc(db, "posts", post.postId);
+      await setDoc(ref, post);
+    },
+
+    async addFeed(feed: FeedInterface): Promise<void> {
+      const ref = doc(db, "feeds", feed.feedID);
+      await setDoc(ref, feed);
+    },
+
+    async addComment(comment: CommentInterface): Promise<void> {
+      const ref = doc(db, "comments", comment.commentId);
+      await setDoc(ref, comment);
+    },
+  };
+})();
 
 export default DataWrapper;
