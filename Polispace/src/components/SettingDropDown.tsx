@@ -9,7 +9,7 @@ const SettingDropDown = () => {
   useEffect(() => {
     const storedDarkMode = localStorage.getItem("ColorMode");
     if (storedDarkMode != null) setDarkModeOn(storedDarkMode == "Dark");
-  });
+  }, []);//added an empty array thing here otherwise useEffect would go into an infinite loop
 
   function toggleDarkMode() {
     const newDark = !darkModeOn;
