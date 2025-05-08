@@ -1,15 +1,27 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import logo from "../assets/polispacelogo.svg";
 import { FeedScope } from "../datamodels";
 import Feed from "@component/Feed";
 import { SettingDropDown } from "@component/SettingDropDown";
+import BillsTicker from "../components/BillsTicker";
 
 const Home = () => {
   const [activeFeed, setActiveFeed] = useState<FeedScope>(FeedScope.Local);
+  const [bills, setBills] = useState<string[]>([]);
 
   const feedScopes = Object.values(FeedScope).filter(
     (value) => typeof value === "number"
   ) as FeedScope[];
+
+  useEffect(() => {
+    fetch("http://localhost:4000/api/bills")
+      .then((res) => res.json())
+      .then((data) => {
+        const titles = data.map((bill: any) => bill.title);
+        setBills(titles);
+      })
+      .catch((err) => console.error("Error fetching bills:", err));
+  }, []);
 
   return (
     <div className="bg-[#F5F5F5] min-h-screen font-sans">
@@ -26,6 +38,7 @@ const Home = () => {
             aria-hidden="true"
           />
           <h1 className="text-2xl font-bold">PoliSpace</h1>
+          <BillsTicker bills={bills} />
         </div>
         <SettingDropDown />
       </header>
