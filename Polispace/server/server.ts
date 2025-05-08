@@ -18,7 +18,7 @@ app.get('/user/:user', (req:Request, res:Response) => {
         res.status(404).send("user is null, try querying again"); //user not found? actually this should be done in the physical datawrapper class...
     }
     try{
-        dataWrapper.getUser(req.body);
+        res.send(dataWrapper.getUser(user));
     }catch{
         res.status(404).send("user not in the db");
     }
@@ -31,7 +31,7 @@ app.get('/feed/:feedID', (req:Request, res:Response) => {
         res.status(404).send("can't find the feed id womp womp"); //its jover
     }
     try{
-        dataWrapper.getFeed(req.body); //we are so barack
+        res.send(dataWrapper.getFeed(feed)); //we are so barack
     }catch{
         res.status(404).send("feed not found"); //its so jover
     }
@@ -44,7 +44,7 @@ app.get('/post/:postID', (req:Request, res:Response) => {
         res.status(404).send("can't find the post womp womp"); //its jover
     }
     try{
-        dataWrapper.getPost(req.body); //we are so barack
+        res.send(dataWrapper.getPost(post)); //we are so barack
     }catch{
         res.status(404).send("post not found"); //its so jover
     }
