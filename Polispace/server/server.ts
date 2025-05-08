@@ -24,6 +24,34 @@ app.get('/user/:user', (req:Request, res:Response) => {
     }
 });
 
+// /feed/12 where 12 is gonna be id of the feed
+app.get('/feed/:feedID', (req:Request, res:Response) => {
+    const {feed} = req.body;
+    if(!feed){
+        res.status(404).send("can't find the feed id womp womp"); //its jover
+    }
+    try{
+        dataWrapper.getFeed(req.body); //we are so barack
+    }catch{
+        res.status(404).send("feed not found"); //its so jover
+    }
+});
+
+// /feed/12 where 12 is gonna be id of the feed
+app.get('/post/:postID', (req:Request, res:Response) => {
+    const {post} = req.body;
+    if(!post){
+        res.status(404).send("can't find the post womp womp"); //its jover
+    }
+    try{
+        dataWrapper.getPost(req.body); //we are so barack
+    }catch{
+        res.status(404).send("post not found"); //its so jover
+    }
+});
+
+//add app.post stuff after we change the datawrapper thingie
+
 
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
