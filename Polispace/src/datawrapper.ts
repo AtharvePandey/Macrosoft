@@ -152,6 +152,10 @@ async function getFromCollection<T>(
   );
 }
 
+function addToCollection<T>(collection: Map<string, T>, id: string, value: T) {
+  collection.set(id, value);
+}
+
 const DataWrapper = (() => ({
   getCurrentUser: () => getFromCollection(userData, "TEST1")!,
   getFeed: (feedId: string) => getFromCollection(feedData, feedId),
@@ -172,6 +176,13 @@ const DataWrapper = (() => ({
       )
     );
   },
+  addUser: (id: string, user: UserInterface) =>
+    addToCollection(userData, id, user),
+  addPost: (id: string, post: PostInterface) =>
+    addToCollection(postData, id, post),
+  addComment: (id: string, comment: CommentInterface) =>
+    addToCollection(commentData, id, comment),
+
 }))();
 
 export default DataWrapper;
