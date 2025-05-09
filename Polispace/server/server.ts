@@ -9,6 +9,7 @@ const app: express.Application = express();
 const port = 3001; //making this port cause idk what other parts of the applications use
 
 app.use(cors());
+app.use(express.json());
 
 app.get('/currUser', async(req:Request, res:Response) => {
     try {
@@ -59,6 +60,10 @@ app.get('/post/:postID', async (req:Request, res:Response) => {
 });
 
 //add app.post stuff after we change the datawrapper thingie
+
+app.post('/addUser', (req:Request, res:Response) => {
+
+});
 
 
 app.listen(port, () => {
