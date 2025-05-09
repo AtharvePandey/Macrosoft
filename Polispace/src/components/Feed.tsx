@@ -6,7 +6,7 @@ import {
   PartialReturn,
   PostInterface,
 } from "../datamodels";
-import DataWrapper from "@dataWrapper";
+//import DataWrapper from "@dataWrapper";
 
 interface FeedProps {
   feedScope: FeedScope;
@@ -21,7 +21,9 @@ const Feed: React.FC<FeedProps> = (props: FeedProps) => {
       const feedToLoad = (await DataWrapper.getCurrentUser())!.feeds[
         props.feedScope
       ]!;
-      setFeed((await DataWrapper.getFeed(feedToLoad))!);
+      //setFeed((await DataWrapper.getFeed(feedToLoad))!); //if we are to use the express server, we must fetch using localhost:3001/feed/feedID...
+      const feed:FeedInterface = await fetch("http://localhost:3001/feed/:" + feedToLoad);
+      setFeed(feed);
       setPosts(feed!.getPosts("TEST", 1));
     };
     loadFeed();
